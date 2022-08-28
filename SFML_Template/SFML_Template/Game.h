@@ -5,6 +5,9 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 
+#include "imgui.h"
+#include "imgui-SFML.h"
+
 /*
 	Game depending functions
 */

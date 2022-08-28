@@ -8,6 +8,7 @@ Game::Game() {
 
 // Destructors
 Game::~Game() {
+    ImGui::SFML::Shutdown();
     delete this->window;
 }
 
@@ -25,6 +26,8 @@ void Game::initWindow() {
 
     this->window = new sf::RenderWindow(this->videoMode, this->windowTitle, sf::Style::Titlebar | sf::Style::Close);
     this->window->setFramerateLimit(60);
+
+    ImGui::SFML::Init(*window);
 }
 
 void Game::setTitle()
@@ -48,6 +51,7 @@ void Game::pollEvents() {
     // Event polling
     while (this->window->pollEvent(this->ev))
     {
+        ImGui::SFML::ProcessEvent(ev);
         switch (this->ev.type)
         {
         case sf::Event::Closed:
@@ -63,10 +67,17 @@ void Game::pollEvents() {
 
 // main update method
 void Game::update() {
-    this->dt = clock.restart().asSeconds();
+    sf::Time delta = clock.restart();
+    ImGui::SFML::Update(*window, delta);
+    this->dt = delta.asSeconds();
+
     this->setTitle();
 
     this->pollEvents();
+
+    ImGui::Begin("Window");
+    ImGui::Text("Text");
+    ImGui::End();
 }
 
 // main render method
@@ -77,5 +88,6 @@ void  Game::render() {
 
     this->window->clear(sf::Color(255, 255, 255, 255));
 
+    ImGui::SFML::Render(*window);
     this->window->display();
 }
